@@ -11,7 +11,7 @@ type StudentRequest struct {
 }
 
 func errParamRequired(param, typ string) error {
-	fmt.Errorf("param '%s' of type '%s' is required", param, typ)
+	return fmt.Errorf("param '%s' of type '%s' is required", param, typ)
 }
 
 func (s *StudentRequest) Validate() error {
@@ -30,4 +30,6 @@ func (s *StudentRequest) Validate() error {
 	if s.Active == nil {
 		return errParamRequired("active", "bool")
 	}
+
+	return nil
 }
