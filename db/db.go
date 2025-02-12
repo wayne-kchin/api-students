@@ -8,6 +8,10 @@ import (
 	"gorm.io/gorm"
 )
 
+type StudentHandler struct {
+	DB *gorm.DB
+}
+
 type Student struct {
 	gorm.Model
 	Name   string `json:"name"`
@@ -28,13 +32,21 @@ func Init() *gorm.DB {
 	return db
 }
 
-func AddStudent(student Student) error {
-	db := Init()
+func NewStudentHandler(db *gorm.DB) *StudentHandler {
+	return &StudentHandler{DB: db}
+}
 
-	if result := db.Create(&student); result.Error != nil {
+func (s *StudentHandler) AddStudent(student Student) error {
+	if result := s.DB.Create(&student); result.Error != nil {
 		return result.Error
 	}
 
 	fmt.Println("Error to create student")
 	return nil
+}
+
+func (s *StudentHandler) GetStudents() ([]Student, error) {
+	students := []Student{}
+	err := s.DB.Find(&students).Error
+	return students, err
 }
